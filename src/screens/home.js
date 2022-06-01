@@ -55,6 +55,7 @@ const HomeScreen = ({navigation}) => {
 
 					<TouchableOpacity
             activeOpacity={0.6}
+						onPress = {() => navigation.navigate('AbsenceScreen')}
             style = {{
               backgroundColor: 'black',
               borderRadius: 10,

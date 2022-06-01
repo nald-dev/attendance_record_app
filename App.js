@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import SignInScreen from './src/screens/sign-in'
 import HomeScreen from './src/screens/home'
 import DailyLoginLogoutScreen from './src/screens/daily-login-logout'
+import AbsenceScreen from './src/screens/absence'
 
 const Stack = createNativeStackNavigator()
 
@@ -33,6 +34,15 @@ const App = () => {
           options={{
             headerShown: true,
             title: 'Daily Login Logout'
+          }}
+        />
+
+        <Stack.Screen
+          name='AbsenceScreen'
+          component={AbsenceScreen}
+          options={{
+            headerShown: true,
+            title: 'Absence'
           }}
         />
       </Stack.Navigator>

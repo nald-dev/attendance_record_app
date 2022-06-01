@@ -1,5 +1,5 @@
 import React from 'react'
-import { SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 
 const userId = 2
 
@@ -19,6 +19,42 @@ const chats = [
 ]
 
 const DailyLoginLogoutScreen = () => {
+	const submitBreak = () => {
+		Alert.alert(
+			'Break?',
+			'Are you sure want to take a break?',
+			[
+				{
+					text: 'Yes',
+					onPress: () => {},
+					style: 'destructive'
+				},
+				{
+					text: 'Cancel',
+					onPress: () => {}
+				}
+			]
+		)
+	}
+
+	const submitBack = () => {
+		Alert.alert(
+			'Back?',
+			'Are you sure want to set your status as back?',
+			[
+				{
+					text: 'Yes',
+					onPress: () => {},
+					style: 'destructive'
+				},
+				{
+					text: 'Cancel',
+					onPress: () => {}
+				}
+			]
+		)
+	}
+
 	return (
 		<SafeAreaView
 			style = {{
@@ -115,6 +151,7 @@ const DailyLoginLogoutScreen = () => {
 					/>
 
 					<TouchableOpacity
+						onPress={submitBreak}
 						style = {{
 							backgroundColor: 'white',
 							borderRadius: 15,
@@ -142,6 +179,7 @@ const DailyLoginLogoutScreen = () => {
 					}}
 				>
 					<TouchableOpacity
+						onPress={submitBack}
 						style = {{
 							backgroundColor: 'white',
 							borderRadius: 15,
