@@ -1,12 +1,35 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View, useWindowDimensions } from 'react-native'
 
+import MapView, {Marker} from 'react-native-maps'
+import ImagePicker from 'react-native-image-crop-picker'
+
 const LoginLogoutFormScreen = ({navigation, route}) => {
+	const [photo, setPhoto] = useState(null)
+
 	navigation.setOptions({
 		title: route.params.title
 	})
 
 	const { width } = useWindowDimensions()
+
+	const pickImage = async() => {
+		const res = await ImagePicker.openCamera({
+			useFrontCamera: true,
+			cropping: false,
+			maxFiles: 1
+		})
+
+		if (res) {
+			const { mime, path, filename } = res
+			
+			setPhoto({
+				mime,
+				path,
+				filename
+			})
+		}
+	}
 
 	return (
 		<SafeAreaView
@@ -25,13 +48,17 @@ const LoginLogoutFormScreen = ({navigation, route}) => {
 				}}
 			>
 				<TouchableOpacity
+					onPress={pickImage}
 					style = {{
 						alignSelf: 'center',
 						borderRadius: 20,
-						overflow: 'hidden'
+						overflow: 'hidden',
+						borderWidth: 5,
+						borderColor: 'white'
 					}}
 				>
 					<Image
+						source={{uri: photo?.path}}
 						style = {{
 							backgroundColor: 'dimgray',
 							height: 120,
@@ -67,20 +94,41 @@ const LoginLogoutFormScreen = ({navigation, route}) => {
 								fontWeight: 'bold'
 							}}
 						>
-							Add Photo
+							{photo ? 'Change' : 'Add'} Photo
 						</Text>
 					</View>
 				</TouchableOpacity>
 
 				<View
 					style = {{
-						backgroundColor: 'orangered',
-						borderRadius: 15,
-						height: (width - 40) / 16 * 9,
+						borderRadius: 20,
 						marginTop: 20,
-						width: width - 40,
+						borderWidth: 5,
+						borderColor: 'white',
+						overflow: 'hidden'
 					}}
-				/>
+				>
+					<MapView
+						region={{
+							latitude: -6.966667,
+							longitude: 110.416664,
+							latitudeDelta: 0.005,
+							longitudeDelta: 0.005,
+						}}
+						key='AIzaSyC5v_sIm0x21CHdIJVAL_03UR3GHulyG1Y'
+						style = {{
+							height: (width - 40) / 16 * 9,
+							width: width - 40,
+						}}
+					>
+						<Marker
+							coordinate={{
+								latitude: -6.966667,
+								longitude: 110.416664,
+							}}
+						/>
+					</MapView>
+				</View>
 
 				<View
 					style = {{
