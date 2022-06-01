@@ -7,6 +7,7 @@ import SignInScreen from './src/screens/sign-in'
 import HomeScreen from './src/screens/home'
 import DailyLoginLogoutScreen from './src/screens/daily-login-logout'
 import AbsenceScreen from './src/screens/absence'
+import LoginLogoutFormScreen from './src/screens/login-logout-form'
 
 const Stack = createNativeStackNavigator()
 
@@ -43,6 +44,14 @@ const App = () => {
           options={{
             headerShown: true,
             title: 'Absence'
+          }}
+        />
+
+        <Stack.Screen
+          name='LoginLogoutFormScreen'
+          component={LoginLogoutFormScreen}
+          options={{
+            headerShown: true
           }}
         />
       </Stack.Navigator>

@@ -18,7 +18,7 @@ const chats = [
 	},
 ]
 
-const DailyLoginLogoutScreen = () => {
+const DailyLoginLogoutScreen = ({navigation}) => {
 	const submitBreak = () => {
 		Alert.alert(
 			'Break?',
@@ -125,6 +125,7 @@ const DailyLoginLogoutScreen = () => {
 					}}
 				>
 					<TouchableOpacity
+						onPress={() => navigation.navigate('LoginLogoutFormScreen', {title: 'Login'})}
 						style = {{
 							backgroundColor: 'white',
 							borderRadius: 15,
@@ -206,6 +207,7 @@ const DailyLoginLogoutScreen = () => {
 					/>
 
 					<TouchableOpacity
+						onPress={() => navigation.navigate('LoginLogoutFormScreen', {title: 'Logout'})}
 						style = {{
 							backgroundColor: 'white',
 							borderRadius: 15,
