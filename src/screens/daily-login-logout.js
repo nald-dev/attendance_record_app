@@ -1,5 +1,7 @@
 import React from 'react'
-import { Alert, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, PermissionsAndroid, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+
+import Geolocation from 'react-native-geolocation-service'
 
 const userId = 2
 
@@ -19,6 +21,39 @@ const chats = [
 ]
 
 const DailyLoginLogoutScreen = ({navigation}) => {
+	const requestLocationPermission = async() => {
+	  try {
+		const granted = await PermissionsAndroid.request(
+		  PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+		  {
+			'title': 'Example App',
+			'message': 'Example App access to your location '
+		  }
+		)
+		if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+		  console.log("You can use the location")
+		} else {
+		  console.log("location permission denied")
+		}
+	  } catch (err) {
+		console.warn(err)
+	  }
+	}
+
+	const submitLogin = async() => {
+		await requestLocationPermission()
+
+		Geolocation.getCurrentPosition(
+			(position) => {
+			  navigation.navigate('LoginLogoutFormScreen', {title: 'Login', position})
+			},
+			() => {
+				Alert.alert('Information', 'Failed to get your location')
+			},
+			{ enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+		)
+	}
+
 	const submitBreak = () => {
 		Alert.alert(
 			'Break?',
@@ -52,6 +87,20 @@ const DailyLoginLogoutScreen = ({navigation}) => {
 					onPress: () => {}
 				}
 			]
+		)
+	}
+
+	const submitLogout = async() => {
+		await requestLocationPermission()
+		
+		Geolocation.getCurrentPosition(
+			(position) => {
+			  navigation.navigate('LoginLogoutFormScreen', {title: 'Logout', position})
+			},
+			() => {
+				Alert.alert('Information', 'Failed to get your location')
+			},
+			{ enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
 		)
 	}
 
@@ -125,7 +174,7 @@ const DailyLoginLogoutScreen = ({navigation}) => {
 					}}
 				>
 					<TouchableOpacity
-						onPress={() => navigation.navigate('LoginLogoutFormScreen', {title: 'Login'})}
+						onPress={submitLogin}
 						style = {{
 							backgroundColor: 'white',
 							borderRadius: 15,
@@ -207,7 +256,7 @@ const DailyLoginLogoutScreen = ({navigation}) => {
 					/>
 
 					<TouchableOpacity
-						onPress={() => navigation.navigate('LoginLogoutFormScreen', {title: 'Logout'})}
+						onPress={submitLogout}
 						style = {{
 							backgroundColor: 'white',
 							borderRadius: 15,

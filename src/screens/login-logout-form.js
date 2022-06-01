@@ -6,6 +6,8 @@ import ImagePicker from 'react-native-image-crop-picker'
 
 const LoginLogoutFormScreen = ({navigation, route}) => {
 	const [photo, setPhoto] = useState(null)
+	
+	const { latitude, longitude } = route.params.position.coords
 
 	navigation.setOptions({
 		title: route.params.title
@@ -109,9 +111,12 @@ const LoginLogoutFormScreen = ({navigation, route}) => {
 					}}
 				>
 					<MapView
+						zoomEnabled={false}
+						rotateEnabled={false}
+						scrollEnabled={false}
 						region={{
-							latitude: -6.966667,
-							longitude: 110.416664,
+							latitude,
+							longitude,
 							latitudeDelta: 0.005,
 							longitudeDelta: 0.005,
 						}}
@@ -123,8 +128,8 @@ const LoginLogoutFormScreen = ({navigation, route}) => {
 					>
 						<Marker
 							coordinate={{
-								latitude: -6.966667,
-								longitude: 110.416664,
+								latitude,
+								longitude,
 							}}
 						/>
 					</MapView>
