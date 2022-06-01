@@ -1,7 +1,15 @@
 import React from 'react'
 import { SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
 
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
 const HomeScreen = ({navigation}) => {
+  const signOut = async() => {
+    await AsyncStorage.removeItem('loginData')
+
+    navigation.replace('SignInScreen')
+  }
+
 	return (
 		<SafeAreaView
 			style = {{
@@ -72,6 +80,28 @@ const HomeScreen = ({navigation}) => {
               }}
             >
               Absence
+            </Text>
+          </TouchableOpacity>
+
+					<TouchableOpacity
+            activeOpacity={0.6}
+						onPress = {signOut}
+            style = {{
+              backgroundColor: 'black',
+              borderRadius: 10,
+							marginTop: 20,
+              padding: 15,
+            }}
+          >
+            <Text
+              style = {{
+                color: 'white',
+                fontSize: 20,
+                fontWeight: 'bold',
+                textAlign: 'center'
+              }}
+            >
+              Sign Out
             </Text>
           </TouchableOpacity>
 				</View>
