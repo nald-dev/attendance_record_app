@@ -75,6 +75,7 @@ const SignInScreen = ({navigation}) => {
 
           <TouchableOpacity
             activeOpacity={0.6}
+            onPress={() => navigation.replace('HomeScreen')}
             style = {{
               backgroundColor: 'forestgreen',
               borderRadius: 10,
