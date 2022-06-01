@@ -5,7 +5,7 @@ import MapView, {Marker} from 'react-native-maps'
 import ImagePicker from 'react-native-image-crop-picker'
 
 const LoginLogoutFormScreen = ({navigation, route}) => {
-	const [photo, setPhoto] = useState(null)
+	const [base64, setBase64] = useState(null)
 	
 	const { latitude, longitude } = route.params.position.coords
 
@@ -19,17 +19,13 @@ const LoginLogoutFormScreen = ({navigation, route}) => {
 		const res = await ImagePicker.openCamera({
 			useFrontCamera: true,
 			cropping: false,
-			maxFiles: 1
+			maxFiles: 1,
+			includeBase64: true,
+			compressImageQuality: 0.5
 		})
 
-		if (res) {
-			const { mime, path, filename } = res
-			
-			setPhoto({
-				mime,
-				path,
-				filename
-			})
+		if (res?.data) {
+			setBase64('data:image/jpeg;base64, ' + res.data)
 		}
 	}
 
@@ -60,7 +56,7 @@ const LoginLogoutFormScreen = ({navigation, route}) => {
 					}}
 				>
 					<Image
-						source={{uri: photo?.path}}
+						source={{uri: base64}}
 						style = {{
 							backgroundColor: 'dimgray',
 							height: 120,
@@ -96,7 +92,7 @@ const LoginLogoutFormScreen = ({navigation, route}) => {
 								fontWeight: 'bold'
 							}}
 						>
-							{photo ? 'Change' : 'Add'} Photo
+							{base64 ? 'Change' : 'Add'} Photo
 						</Text>
 					</View>
 				</TouchableOpacity>
