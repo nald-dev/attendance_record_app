@@ -28,6 +28,7 @@ const SignInScreen = ({navigation}) => {
         >
           <Text
             style={{
+              color: 'black',
               fontSize: 32,
               fontWeight: 'bold',
               textAlign: 'center'

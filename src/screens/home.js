@@ -1,7 +1,7 @@
 import React from 'react'
 import { SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
 
-const HomeScreen = () => {
+const HomeScreen = ({navigation}) => {
 	return (
 		<SafeAreaView
 			style = {{
@@ -17,6 +17,7 @@ const HomeScreen = () => {
 			>
 				<Text
 					style={{
+            color: 'black',
 						fontSize: 32,
 						fontWeight: 'bold',
 						textAlign: 'center'
@@ -33,6 +34,7 @@ const HomeScreen = () => {
 				>
 					<TouchableOpacity
             activeOpacity={0.6}
+						onPress = {() => navigation.navigate('DailyLoginLogoutScreen')}
             style = {{
               backgroundColor: 'black',
               borderRadius: 10,
