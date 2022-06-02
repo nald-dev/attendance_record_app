@@ -79,7 +79,7 @@ const LoginLogoutFormScreen = ({navigation, route}) => {
 			} else {
 			  Alert.alert('Information', resJSON.info)
 			}
-		  })
+		})
 	}
 
 	return (

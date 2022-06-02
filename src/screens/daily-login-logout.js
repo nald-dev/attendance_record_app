@@ -82,7 +82,29 @@ const DailyLoginLogoutScreen = ({navigation}) => {
 			[
 				{
 					text: 'Yes',
-					onPress: () => {},
+					onPress: () => {
+						const formData = new FormData()
+							
+						formData.append('sender_id', userId)
+						formData.append('type', 'break')
+				
+						fetch(`${BASE_URL}/submit-status`, {
+							headers: {
+								Accept: 'application/json',
+								'Content-type': 'multipart/form-data'
+							},
+							method: 'POST',
+							body: formData
+							})
+							.then(res => res.json())
+							.then(resJSON => {
+							if (resJSON.status === 'created') {
+								loadStatuses()
+							} else {
+								Alert.alert('Information', resJSON.info)
+							}
+						})
+					},
 					style: 'destructive'
 				},
 				{
@@ -100,7 +122,29 @@ const DailyLoginLogoutScreen = ({navigation}) => {
 			[
 				{
 					text: 'Yes',
-					onPress: () => {},
+					onPress: () => {
+						const formData = new FormData()
+							
+						formData.append('sender_id', userId)
+						formData.append('type', 'back')
+				
+						fetch(`${BASE_URL}/submit-status`, {
+							headers: {
+								Accept: 'application/json',
+								'Content-type': 'multipart/form-data'
+							},
+							method: 'POST',
+							body: formData
+							})
+							.then(res => res.json())
+							.then(resJSON => {
+							if (resJSON.status === 'created') {
+								loadStatuses()
+							} else {
+								Alert.alert('Information', resJSON.info)
+							}
+						})
+					},
 					style: 'destructive'
 				},
 				{
