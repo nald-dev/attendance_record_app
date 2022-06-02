@@ -1,7 +1,25 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Alert, SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
 
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
+import BASE_URL from '../helpers/base-url'
+
 const AbsenceScreen = ({navigation}) => {
+	const [userId, setUserId] = useState(null)
+	const [userName, setUserName] = useState('')
+
+	useEffect(() => {
+		loadUserData()
+	}, [])
+
+	const loadUserData = async() => {
+		const { id, name } = JSON.parse(await AsyncStorage.getItem('loginData'))
+		
+		setUserId(id)
+		setUserName(name)
+	}
+
 	const submitSickLeave = () => {
 		Alert.alert(
 			'Sick Leave?',
@@ -9,7 +27,42 @@ const AbsenceScreen = ({navigation}) => {
 			[
 				{
 					text: 'Yes',
-					onPress: () => {},
+					onPress: () => {
+						const formData = new FormData()
+							
+						formData.append('sender_id', userId)
+						formData.append('type', 'leave')
+						formData.append('value', `${userName} is taking sick leave today`)
+				
+						fetch(`${BASE_URL}/submit-status`, {
+							headers: {
+								Accept: 'application/json',
+								'Content-type': 'multipart/form-data'
+							},
+							method: 'POST',
+							body: formData
+							})
+							.then(res => res.json())
+							.then(resJSON => {
+							if (resJSON.status === 'created') {
+								Alert.alert(
+									'Information',
+									resJSON.info,
+									[
+										{
+											onPress: navigation.goBack,
+											text: 'OK'
+										}
+									],
+									{
+										cancelable: false
+									}
+								)
+							} else {
+								Alert.alert('Information', resJSON.info)
+							}
+						})
+					},
 					style: 'destructive'
 				},
 				{
@@ -27,7 +80,42 @@ const AbsenceScreen = ({navigation}) => {
 			[
 				{
 					text: 'Yes',
-					onPress: () => {},
+					onPress: () => {
+						const formData = new FormData()
+							
+						formData.append('sender_id', userId)
+						formData.append('type', 'leave')
+						formData.append('value', `${userName} is taking annual leave today`)
+				
+						fetch(`${BASE_URL}/submit-status`, {
+							headers: {
+								Accept: 'application/json',
+								'Content-type': 'multipart/form-data'
+							},
+							method: 'POST',
+							body: formData
+							})
+							.then(res => res.json())
+							.then(resJSON => {
+							if (resJSON.status === 'created') {
+								Alert.alert(
+									'Information',
+									resJSON.info,
+									[
+										{
+											onPress: navigation.goBack,
+											text: 'OK'
+										}
+									],
+									{
+										cancelable: false
+									}
+								)
+							} else {
+								Alert.alert('Information', resJSON.info)
+							}
+						})
+					},
 					style: 'destructive'
 				},
 				{
