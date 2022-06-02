@@ -63,28 +63,6 @@ const HomeScreen = ({navigation}) => {
 
 					<TouchableOpacity
             activeOpacity={0.6}
-						onPress = {() => navigation.navigate('AbsenceScreen')}
-            style = {{
-              backgroundColor: 'black',
-              borderRadius: 10,
-							marginTop: 20,
-              padding: 15,
-            }}
-          >
-            <Text
-              style = {{
-                color: 'white',
-                fontSize: 20,
-                fontWeight: 'bold',
-                textAlign: 'center'
-              }}
-            >
-              Absence
-            </Text>
-          </TouchableOpacity>
-
-					<TouchableOpacity
-            activeOpacity={0.6}
 						onPress = {signOut}
             style = {{
               backgroundColor: 'black',

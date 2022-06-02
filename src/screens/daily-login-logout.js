@@ -222,7 +222,35 @@ const DailyLoginLogoutScreen = ({navigation}) => {
 							width: 10
 						}}
 					/>
+					
+					<TouchableOpacity
+						onPress={submitLogout}
+						style = {{
+							backgroundColor: 'white',
+							borderRadius: 15,
+							borderWidth: 1,
+							flex: 1,
+							padding: 15
+						}}
+					>
+						<Text
+							style = {{
+								color: 'black',
+								fontWeight: 'bold',
+								textAlign: 'center'
+							}}
+						>
+							Logout
+						</Text>
+					</TouchableOpacity>
+				</View>
 
+				<View
+					style = {{
+						flexDirection: 'row',
+						marginTop: 10
+					}}
+				>
 					<TouchableOpacity
 						onPress={submitBreak}
 						style = {{
@@ -243,14 +271,13 @@ const DailyLoginLogoutScreen = ({navigation}) => {
 							Break
 						</Text>
 					</TouchableOpacity>
-				</View>
 
-				<View
-					style = {{
-						flexDirection: 'row',
-						marginTop: 10
-					}}
-				>
+					<View
+						style = {{
+							width: 10
+						}}
+					/>
+
 					<TouchableOpacity
 						onPress={submitBack}
 						style = {{
@@ -279,7 +306,7 @@ const DailyLoginLogoutScreen = ({navigation}) => {
 					/>
 
 					<TouchableOpacity
-						onPress={submitLogout}
+						onPress={() => navigation.navigate('AbsenceScreen')}
 						style = {{
 							backgroundColor: 'white',
 							borderRadius: 15,
@@ -295,7 +322,7 @@ const DailyLoginLogoutScreen = ({navigation}) => {
 								textAlign: 'center'
 							}}
 						>
-							Logout
+							Leave
 						</Text>
 					</TouchableOpacity>
 				</View>
