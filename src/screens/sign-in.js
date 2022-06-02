@@ -44,7 +44,7 @@ const SignInScreen = ({navigation}) => {
 
         navigation.replace('HomeScreen')
       } else {
-        Alert.alert('Infomation', resJSON.info)
+        Alert.alert('Information', resJSON.info)
       }
     })
   }

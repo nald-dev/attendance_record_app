@@ -1,11 +1,25 @@
-import React, { useState } from 'react'
-import { Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View, useWindowDimensions } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { Alert, Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View, useWindowDimensions } from 'react-native'
 
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import MapView, {Marker} from 'react-native-maps'
 import ImagePicker from 'react-native-image-crop-picker'
 
+import BASE_URL from '../helpers/base-url'
+
 const LoginLogoutFormScreen = ({navigation, route}) => {
 	const [base64, setBase64] = useState(null)
+	const [userId, setUserId] = useState(null)
+
+	useEffect(() => {
+		loadUserId()
+	}, [])
+
+	const loadUserId = async() => {
+		const { id } = JSON.parse(await AsyncStorage.getItem('loginData'))
+		
+		setUserId(id)
+	}
 	
 	const { latitude, longitude } = route.params.position.coords
 
@@ -27,6 +41,45 @@ const LoginLogoutFormScreen = ({navigation, route}) => {
 		if (res?.data) {
 			setBase64('data:image/jpeg;base64, ' + res.data)
 		}
+	}
+
+	const submit = () => {
+		const formData = new FormData()
+		
+		formData.append('sender_id', userId)
+		formData.append('photo', base64)
+		formData.append('latitude', latitude)
+		formData.append('longitude', longitude)
+		formData.append('type', route.params.title.toLowerCase())
+
+		fetch(`${BASE_URL}/submit-status`, {
+			headers: {
+			  Accept: 'application/json',
+			  'Content-type': 'multipart/form-data'
+			},
+			method: 'POST',
+			body: formData
+		  })
+		  .then(res => res.json())
+		  .then(resJSON => {
+			if (resJSON.status === 'created') {
+				Alert.alert(
+					'Information',
+					resJSON.info,
+					[
+						{
+							onPress: navigation.goBack,
+							text: 'OK'
+						}
+					],
+					{
+						cancelable: false
+					}
+				)
+			} else {
+			  Alert.alert('Information', resJSON.info)
+			}
+		  })
 	}
 
 	return (
@@ -139,8 +192,10 @@ const LoginLogoutFormScreen = ({navigation, route}) => {
 
 				<TouchableOpacity
 					activeOpacity={0.6}
+					disabled = {!base64}
+					onPress={submit}
 					style = {{
-						backgroundColor: 'forestgreen',
+						backgroundColor: base64 ? 'forestgreen' : 'gray',
 						borderRadius: 10,
 						padding: 15,
 					}}

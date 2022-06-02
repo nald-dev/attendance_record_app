@@ -1,26 +1,47 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Alert, PermissionsAndroid, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import Geolocation from 'react-native-geolocation-service'
+import moment from 'moment'
 
-const userId = 2
-
-const chats = [
-	{
-		id: 1,
-		owner_id: 2,
-		value: 'Rey Break',
-		time: '11:01'
-	},
-	{
-		id: 2,
-		owner_id: 1,
-		value: 'Nova Break',
-		time: '12:12'
-	},
-]
+import BASE_URL from '../helpers/base-url'
+import { useIsFocused } from '@react-navigation/native'
 
 const DailyLoginLogoutScreen = ({navigation}) => {
+	const [userId, setUserId] = useState(null)
+	const [statuses, setStatuses] = useState([])
+
+	const scrollViewRef = useRef()
+
+	const isFocused = useIsFocused()
+
+	useEffect(() => {
+		if (isFocused) {
+			loadStatuses()
+		}
+	}, [isFocused])
+
+	useEffect(() => {
+		loadUserId()
+	}, [])
+
+	const loadStatuses = () => {
+		fetch(`${BASE_URL}/get-statuses`)
+		.then(res => res.json())
+		.then(async(resJSON) => {
+			if (resJSON.status === 'success') {
+				setStatuses(resJSON.data)
+			}
+		})
+	}
+
+	const loadUserId = async() => {
+		const { id } = JSON.parse(await AsyncStorage.getItem('loginData'))
+		
+		setUserId(id)
+	}
+
 	const requestLocationPermission = async() => {
 	  try {
 		const granted = await PermissionsAndroid.request(
@@ -117,19 +138,21 @@ const DailyLoginLogoutScreen = ({navigation}) => {
 					paddingHorizontal: 20,
 					paddingBottom: 20
 				}}
+				onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: true })}
+				ref={scrollViewRef}
 				style = {{
 					flex: 1
 				}}
 			>
 				{
-					chats.map(chat => {
+					statuses.map(status => {
 						return (
 							<TouchableOpacity
 								activeOpacity={0.6}
-								key = {chat.id}
+								key = {status.id}
 								style = {{
-									alignSelf: chat.owner_id === userId ? 'flex-end' : 'flex-start',
-									backgroundColor: chat.owner_id === userId ? 'green' : 'steelblue',
+									alignSelf: status.sender_id === userId ? 'flex-end' : 'flex-start',
+									backgroundColor: status.sender_id === userId ? 'green' : 'steelblue',
 									borderRadius: 15,
 									marginTop: 20,
 									padding: 15
@@ -138,10 +161,10 @@ const DailyLoginLogoutScreen = ({navigation}) => {
 								<Text
 									style = {{
 										color: 'white',
-										fontSize: 16
+										fontSize: 16,
 									}}
 								>
-									{chat.value}
+									{status.value}
 								</Text>
 
 								<Text
@@ -152,7 +175,7 @@ const DailyLoginLogoutScreen = ({navigation}) => {
 										textAlign: 'right'
 									}}
 								>
-									{chat.time}
+									{moment(status.datetime).format('HH:mm - D MMM YYYY')}
 								</Text>
 							</TouchableOpacity>
 						)
