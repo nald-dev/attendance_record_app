@@ -194,6 +194,23 @@ const DailyLoginLogoutScreen = ({navigation}) => {
 							<TouchableOpacity
 								activeOpacity={0.6}
 								key = {status.id}
+								onPress={() => {
+									const { photo, latitude, longitude } = status
+
+									if (photo || (latitude && longitude)) {
+										navigation.navigate('LoginLogoutFormScreen', {
+											title: status.value,
+											onlyForPreview: true,
+											photo,
+											position: {
+												coords: {
+													latitude,
+													longitude
+												}
+											}
+										})
+									}
+								}}
 								style = {{
 									alignSelf: status.sender_id === userId ? 'flex-end' : 'flex-start',
 									backgroundColor: status.sender_id === userId ? 'green' : 'steelblue',

@@ -8,7 +8,7 @@ import ImagePicker from 'react-native-image-crop-picker'
 import BASE_URL from '../helpers/base-url'
 
 const LoginLogoutFormScreen = ({navigation, route}) => {
-	const [base64, setBase64] = useState(null)
+	const [base64, setBase64] = useState(route.params.photo)
 	const [userId, setUserId] = useState(null)
 
 	useEffect(() => {
@@ -100,6 +100,7 @@ const LoginLogoutFormScreen = ({navigation, route}) => {
 			>
 				<TouchableOpacity
 					onPress={pickImage}
+					disabled={route.params.onlyForPreview}
 					style = {{
 						alignSelf: 'center',
 						borderRadius: 20,
@@ -117,37 +118,40 @@ const LoginLogoutFormScreen = ({navigation, route}) => {
 						}}
 					/>
 
-					<View
-						style = {{
-							position: 'absolute',
-							top: 0,
-							right: 0,
-							left: 0,
-							bottom: 0,
-							justifyContent: 'center',
-							alignItems: 'center'
-						}}
-					>
-						<Text
-							style = {{
-								color: 'white',
-								fontSize: 32,
-								fontWeight: 'bold',
-								marginTop: -10
-							}}
-						>
-							+
-						</Text>
+					{
+						!route.params.onlyForPreview &&
+							<View
+								style = {{
+									position: 'absolute',
+									top: 0,
+									right: 0,
+									left: 0,
+									bottom: 0,
+									justifyContent: 'center',
+									alignItems: 'center'
+								}}
+							>
+								<Text
+									style = {{
+										color: 'white',
+										fontSize: 32,
+										fontWeight: 'bold',
+										marginTop: -10
+									}}
+								>
+									+
+								</Text>
 
-						<Text
-							style = {{
-								color: 'white',
-								fontWeight: 'bold'
-							}}
-						>
-							{base64 ? 'Change' : 'Add'} Photo
-						</Text>
-					</View>
+								<Text
+									style = {{
+										color: 'white',
+										fontWeight: 'bold'
+									}}
+								>
+									{base64 ? 'Change' : 'Add'} Photo
+								</Text>
+							</View>
+					}
 				</TouchableOpacity>
 
 				<View
@@ -183,34 +187,37 @@ const LoginLogoutFormScreen = ({navigation, route}) => {
 						/>
 					</MapView>
 				</View>
-
+				
 				<View
 					style = {{
 						flex: 1
 					}}
 				/>
 
-				<TouchableOpacity
-					activeOpacity={0.6}
-					disabled = {!base64}
-					onPress={submit}
-					style = {{
-						backgroundColor: base64 ? 'forestgreen' : 'gray',
-						borderRadius: 10,
-						padding: 15,
-					}}
-				>
-					<Text
-						style = {{
-							color: 'white',
-							fontSize: 20,
-							fontWeight: 'bold',
-							textAlign: 'center'
-						}}
-					>
-						Submit
-					</Text>
-				</TouchableOpacity>
+				{
+					!route.params.onlyForPreview &&
+						<TouchableOpacity
+							activeOpacity={0.6}
+							disabled = {!base64}
+							onPress={submit}
+							style = {{
+								backgroundColor: base64 ? 'forestgreen' : 'gray',
+								borderRadius: 10,
+								padding: 15,
+							}}
+						>
+							<Text
+								style = {{
+									color: 'white',
+									fontSize: 20,
+									fontWeight: 'bold',
+									textAlign: 'center'
+								}}
+							>
+								Submit
+							</Text>
+						</TouchableOpacity>
+				}
 			</ScrollView>
 		</SafeAreaView>
 	)
