@@ -10,6 +10,7 @@ import { useIsFocused } from '@react-navigation/native'
 
 const DailyLoginLogoutScreen = ({navigation}) => {
 	const [userId, setUserId] = useState(null)
+	const [userType, setUserType] = useState('')
 	const [statuses, setStatuses] = useState([])
 
 	const scrollViewRef = useRef()
@@ -23,7 +24,7 @@ const DailyLoginLogoutScreen = ({navigation}) => {
 	}, [isFocused])
 
 	useEffect(() => {
-		loadUserId()
+		loadUserData()
 	}, [])
 
 	const loadStatuses = () => {
@@ -36,10 +37,11 @@ const DailyLoginLogoutScreen = ({navigation}) => {
 		})
 	}
 
-	const loadUserId = async() => {
-		const { id } = JSON.parse(await AsyncStorage.getItem('loginData'))
+	const loadUserData = async() => {
+		const { id, type } = JSON.parse(await AsyncStorage.getItem('loginData'))
 		
 		setUserId(id)
+		setUserType(type)
 	}
 
 	const requestLocationPermission = async() => {
@@ -244,150 +246,153 @@ const DailyLoginLogoutScreen = ({navigation}) => {
 				}
 			</ScrollView>
 
-			<View
-				style = {{
-					backgroundColor: 'rgb(240,240,240)',
-					borderTopStartRadius: 20,
-					borderTopEndRadius: 20,
-					padding: 20
-				}}
-			>
-				<View
-					style = {{
-						flexDirection: 'row'
-					}}
-				>
-					<TouchableOpacity
-						onPress={submitLogin}
-						style = {{
-							backgroundColor: 'white',
-							borderRadius: 15,
-							borderWidth: 1,
-							flex: 1,
-							padding: 15
-						}}
-					>
-						<Text
-							style = {{
-								color: 'black',
-								fontWeight: 'bold',
-								textAlign: 'center'
-							}}
-						>
-							Login
-						</Text>
-					</TouchableOpacity>
-
+			{
+				userType !== 'hr' &&
 					<View
 						style = {{
-							width: 10
-						}}
-					/>
-					
-					<TouchableOpacity
-						onPress={submitLogout}
-						style = {{
-							backgroundColor: 'white',
-							borderRadius: 15,
-							borderWidth: 1,
-							flex: 1,
-							padding: 15
+							backgroundColor: 'rgb(240,240,240)',
+							borderTopStartRadius: 20,
+							borderTopEndRadius: 20,
+							padding: 20
 						}}
 					>
-						<Text
+						<View
 							style = {{
-								color: 'black',
-								fontWeight: 'bold',
-								textAlign: 'center'
+								flexDirection: 'row'
 							}}
 						>
-							Logout
-						</Text>
-					</TouchableOpacity>
-				</View>
+							<TouchableOpacity
+								onPress={submitLogin}
+								style = {{
+									backgroundColor: 'white',
+									borderRadius: 15,
+									borderWidth: 1,
+									flex: 1,
+									padding: 15
+								}}
+							>
+								<Text
+									style = {{
+										color: 'black',
+										fontWeight: 'bold',
+										textAlign: 'center'
+									}}
+								>
+									Login
+								</Text>
+							</TouchableOpacity>
 
-				<View
-					style = {{
-						flexDirection: 'row',
-						marginTop: 10
-					}}
-				>
-					<TouchableOpacity
-						onPress={submitBreak}
-						style = {{
-							backgroundColor: 'white',
-							borderRadius: 15,
-							borderWidth: 1,
-							flex: 1,
-							padding: 15
-						}}
-					>
-						<Text
+							<View
+								style = {{
+									width: 10
+								}}
+							/>
+							
+							<TouchableOpacity
+								onPress={submitLogout}
+								style = {{
+									backgroundColor: 'white',
+									borderRadius: 15,
+									borderWidth: 1,
+									flex: 1,
+									padding: 15
+								}}
+							>
+								<Text
+									style = {{
+										color: 'black',
+										fontWeight: 'bold',
+										textAlign: 'center'
+									}}
+								>
+									Logout
+								</Text>
+							</TouchableOpacity>
+						</View>
+
+						<View
 							style = {{
-								color: 'black',
-								fontWeight: 'bold',
-								textAlign: 'center'
+								flexDirection: 'row',
+								marginTop: 10
 							}}
 						>
-							Break
-						</Text>
-					</TouchableOpacity>
+							<TouchableOpacity
+								onPress={submitBreak}
+								style = {{
+									backgroundColor: 'white',
+									borderRadius: 15,
+									borderWidth: 1,
+									flex: 1,
+									padding: 15
+								}}
+							>
+								<Text
+									style = {{
+										color: 'black',
+										fontWeight: 'bold',
+										textAlign: 'center'
+									}}
+								>
+									Break
+								</Text>
+							</TouchableOpacity>
 
-					<View
-						style = {{
-							width: 10
-						}}
-					/>
+							<View
+								style = {{
+									width: 10
+								}}
+							/>
 
-					<TouchableOpacity
-						onPress={submitBack}
-						style = {{
-							backgroundColor: 'white',
-							borderRadius: 15,
-							borderWidth: 1,
-							flex: 1,
-							padding: 15
-						}}
-					>
-						<Text
-							style = {{
-								color: 'black',
-								fontWeight: 'bold',
-								textAlign: 'center'
-							}}
-						>
-							Back
-						</Text>
-					</TouchableOpacity>
+							<TouchableOpacity
+								onPress={submitBack}
+								style = {{
+									backgroundColor: 'white',
+									borderRadius: 15,
+									borderWidth: 1,
+									flex: 1,
+									padding: 15
+								}}
+							>
+								<Text
+									style = {{
+										color: 'black',
+										fontWeight: 'bold',
+										textAlign: 'center'
+									}}
+								>
+									Back
+								</Text>
+							</TouchableOpacity>
 
-					<View
-						style = {{
-							width: 10
-						}}
-					/>
+							<View
+								style = {{
+									width: 10
+								}}
+							/>
 
-					<TouchableOpacity
-						onPress={() => navigation.navigate('AbsenceScreen')}
-						style = {{
-							backgroundColor: 'white',
-							borderRadius: 15,
-							borderWidth: 1,
-							flex: 1,
-							padding: 15
-						}}
-					>
-						<Text
-							style = {{
-								color: 'black',
-								fontWeight: 'bold',
-								textAlign: 'center'
-							}}
-						>
-							Leave
-						</Text>
-					</TouchableOpacity>
-				</View>
-			</View>
+							<TouchableOpacity
+								onPress={() => navigation.navigate('AbsenceScreen')}
+								style = {{
+									backgroundColor: 'white',
+									borderRadius: 15,
+									borderWidth: 1,
+									flex: 1,
+									padding: 15
+								}}
+							>
+								<Text
+									style = {{
+										color: 'black',
+										fontWeight: 'bold',
+										textAlign: 'center'
+									}}
+								>
+									Leave
+								</Text>
+							</TouchableOpacity>
+						</View>
+					</View>
+			}
 		</SafeAreaView>
 	)
 }
