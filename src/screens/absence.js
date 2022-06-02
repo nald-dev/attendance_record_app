@@ -2,12 +2,16 @@ import React, { useEffect, useState } from 'react'
 import { Alert, SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import Dialog from "react-native-dialog"
 
 import BASE_URL from '../helpers/base-url'
 
 const AbsenceScreen = ({navigation}) => {
 	const [userId, setUserId] = useState(null)
 	const [userName, setUserName] = useState('')
+
+	const [isOtherReasonModalInputVisible, setIsOtherReasonModalInputVisible] = useState(false)
+	const [otherReasonLeaveValue, setOtherReasonLeaveValue] = useState('')
 
 	useEffect(() => {
 		loadUserData()
@@ -133,7 +137,7 @@ const AbsenceScreen = ({navigation}) => {
 			[
 				{
 					text: 'Yes',
-					onPress: () => {},
+					onPress: () => setIsOtherReasonModalInputVisible(true),
 					style: 'destructive'
 				},
 				{
@@ -223,6 +227,66 @@ const AbsenceScreen = ({navigation}) => {
 					</Text>
 				</TouchableOpacity>
 			</View>
+
+			<Dialog.Container
+				visible = {isOtherReasonModalInputVisible}
+				onRequestClose = {() => setIsOtherReasonModalInputVisible(false)}
+			>
+				<Dialog.Title>
+					Other Reason Leave
+				</Dialog.Title>
+
+				<Dialog.Input
+					onChangeText={setOtherReasonLeaveValue}
+					placeholder='Input your reason here...'
+					value={otherReasonLeaveValue}
+				/>
+
+				<Dialog.Button
+					label="OK"
+					onPress={() => {
+						const formData = new FormData()
+							
+						formData.append('sender_id', userId)
+						formData.append('type', 'leave')
+						formData.append('value', `${userName} is taking leave with reason '${otherReasonLeaveValue}'`)
+				
+						fetch(`${BASE_URL}/submit-status`, {
+							headers: {
+								Accept: 'application/json',
+								'Content-type': 'multipart/form-data'
+							},
+							method: 'POST',
+							body: formData
+							})
+							.then(res => res.json())
+							.then(resJSON => {
+							if (resJSON.status === 'created') {
+								Alert.alert(
+									'Information',
+									resJSON.info,
+									[
+										{
+											onPress: navigation.goBack,
+											text: 'OK'
+										}
+									],
+									{
+										cancelable: false
+									}
+								)
+							} else {
+								Alert.alert('Information', resJSON.info)
+							}
+						})
+					}}
+				/>
+
+      			<Dialog.Button
+				  	label="Cancel"
+					onPress={() => setIsOtherReasonModalInputVisible(false)}  
+				/>
+			</Dialog.Container>
 		</SafeAreaView>
 	)
 }
