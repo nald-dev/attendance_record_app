@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Alert, KeyboardAvoidingView, Platform, ScrollView, Text, TextInput, TouchableOpacity, SafeAreaView, View } from 'react-native'
+import { Alert, KeyboardAvoidingView, Linking, Platform, ScrollView, Text, TextInput, TouchableOpacity, SafeAreaView, View } from 'react-native'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
@@ -122,6 +122,36 @@ const SignInScreen = ({navigation}) => {
               }}
             />
           </View>
+
+          <Text
+            style = {{
+              color: 'black',
+              textAlign: 'center',
+              fontWeight: 'bold'
+            }}
+          >
+            Don't have an account or need help?
+          </Text>
+
+          <Text
+            style = {{
+              color: 'black',
+              textAlign: 'center',
+              marginBottom: 20
+            }}
+          >
+            {'Contact '}
+            
+            <Text
+              onPress={() => Linking.openURL('https://api.whatsapp.com/send?phone=6288233893699')}
+              style = {{
+                color: 'steelblue',
+                fontWeight: 'bold'
+              }}
+            >  
+              Administrator
+            </Text>
+          </Text>
 
           <TouchableOpacity
             activeOpacity={0.6}
