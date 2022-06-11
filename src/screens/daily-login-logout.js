@@ -165,7 +165,7 @@ const DailyLoginLogoutScreen = ({navigation}) => {
 			  navigation.navigate('LoginLogoutFormScreen', {title: 'Logout', position})
 			},
 			() => {
-				Alert.alert('Information', 'Failed to get your location')
+				console.log('Information', 'Failed to get your location')
 			},
 			{ enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
 		)

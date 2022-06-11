@@ -1,3 +1,3 @@
-const BASE_URL = 'http://10.0.2.2:3000'
+const BASE_URL = 'https://attendance-record-app.herokuapp.com'
 
 export default BASE_URL

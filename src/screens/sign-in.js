@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Alert, KeyboardAvoidingView, Linking, Platform, ScrollView, Text, TextInput, TouchableOpacity, SafeAreaView, View } from 'react-native'
+import { ActivityIndicator, Alert, KeyboardAvoidingView, Linking, Platform, ScrollView, Text, TextInput, TouchableOpacity, SafeAreaView, View } from 'react-native'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
@@ -8,6 +8,7 @@ import BASE_URL from '../helpers/base-url'
 const SignInScreen = ({navigation}) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   const passwordInput = useRef()
 
@@ -23,13 +24,15 @@ const SignInScreen = ({navigation}) => {
     }
   }
 
-  const signIn = () => {
+  const signIn = async() => {
+    setIsLoading(true)
+
     const formData = new FormData()
 
     formData.append('username', username)
     formData.append('password', password)
 
-    fetch(`${BASE_URL}/sign-in`, {
+    await fetch(`${BASE_URL}/sign-in`, {
       headers: {
         Accept: 'application/json',
         'Content-type': 'multipart/form-data'
@@ -47,6 +50,8 @@ const SignInScreen = ({navigation}) => {
         Alert.alert('Information', resJSON.info)
       }
     })
+
+    setIsLoading(false)
   }
 
   return (
@@ -155,20 +160,31 @@ const SignInScreen = ({navigation}) => {
 
           <TouchableOpacity
             activeOpacity={0.6}
-            disabled={username.trim() === '' || password === ''}
+            disabled={username.trim() === '' || password === '' || isLoading}
             onPress={signIn}
             style = {{
-              backgroundColor: username.trim() === '' || password === '' ? 'gray' : 'forestgreen',
+              backgroundColor: username.trim() === '' || password === '' || isLoading ? 'gray' : 'forestgreen',
               borderRadius: 10,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
               padding: 15,
             }}
           >
+            {
+              isLoading &&
+                <ActivityIndicator
+                  color='white'
+                  size='small'
+                />
+            }
+
             <Text
               style = {{
                 color: 'white',
                 fontSize: 20,
                 fontWeight: 'bold',
-                textAlign: 'center'
+                marginLeft: 10
               }}
             >
               Sign In

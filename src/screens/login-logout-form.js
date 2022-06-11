@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Alert, Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View, useWindowDimensions } from 'react-native'
+import { ActivityIndicator, Alert, Image, SafeAreaView, ScrollView, Text, TouchableOpacity, View, useWindowDimensions } from 'react-native'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import MapView, {Marker} from 'react-native-maps'
@@ -10,6 +10,8 @@ import BASE_URL from '../helpers/base-url'
 const LoginLogoutFormScreen = ({navigation, route}) => {
 	const [base64, setBase64] = useState(route.params.photo)
 	const [userId, setUserId] = useState(null)
+
+	const [isLoading, setIsLoading] = useState(false)
 
 	useEffect(() => {
 		loadUserId()
@@ -43,7 +45,9 @@ const LoginLogoutFormScreen = ({navigation, route}) => {
 		}
 	}
 
-	const submit = () => {
+	const submit = async() => {
+		setIsLoading(true)
+
 		const formData = new FormData()
 		
 		formData.append('sender_id', userId)
@@ -52,7 +56,7 @@ const LoginLogoutFormScreen = ({navigation, route}) => {
 		formData.append('longitude', longitude)
 		formData.append('type', route.params.title.toLowerCase())
 
-		fetch(`${BASE_URL}/submit-status`, {
+		await fetch(`${BASE_URL}/submit-status`, {
 			headers: {
 			  Accept: 'application/json',
 			  'Content-type': 'multipart/form-data'
@@ -80,6 +84,8 @@ const LoginLogoutFormScreen = ({navigation, route}) => {
 			  Alert.alert('Information', resJSON.info)
 			}
 		})
+
+		setIsLoading(false)
 	}
 
 	return (
@@ -198,20 +204,31 @@ const LoginLogoutFormScreen = ({navigation, route}) => {
 					!route.params.onlyForPreview &&
 						<TouchableOpacity
 							activeOpacity={0.6}
-							disabled = {!base64}
+							disabled = {!base64 || isLoading}
 							onPress={submit}
 							style = {{
-								backgroundColor: base64 ? 'forestgreen' : 'gray',
+								alignItems: 'center',
+								justifyContent: 'center',
+								backgroundColor: base64 && !isLoading ? 'forestgreen' : 'gray',
 								borderRadius: 10,
+								flexDirection: 'row',
 								padding: 15,
 							}}
 						>
+							{
+								isLoading &&
+									<ActivityIndicator
+										color='white'
+										size= 'small'
+									/>
+							}
+
 							<Text
 								style = {{
 									color: 'white',
 									fontSize: 20,
 									fontWeight: 'bold',
-									textAlign: 'center'
+									marginLeft: 10
 								}}
 							>
 								Submit
